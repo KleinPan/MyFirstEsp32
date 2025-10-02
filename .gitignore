@@ -1,0 +1,46 @@
+# ESP-IDF 编译产物
+/build/                  # 编译输出目录（最关键，体积大且可重建）
+#/sdkconfig               # 项目配置文件（本地配置，不同环境可能不同）
+#/sdkconfig.old           # 配置文件备份
+
+# 临时文件和日志
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# IDE/编辑器配置（根据你使用的工具添加）
+# VS Code
+.vscode/
+*.code-workspace
+
+# CLion/IDEA
+.idea/
+*.iml
+cmake-build-*/
+
+# Eclipse
+.cproject
+.project
+.settings/
+
+# 串口监控日志（如使用 idf.py monitor 生成的）
+monitor_*.log
+
+# 自定义脚本生成的文件（如果有）
+/scripts/output/
+
+# 第三方组件（如果使用本地复制而非 git submodule）
+/components/*/           # 忽略组件目录下的内容（保留目录结构）
+!/components/            # 但保留 components 目录本身
+
+# 虚拟环境（如果使用 Python 脚本）
+venv/
+.env
+.env.local
+
+# 操作系统文件
+.DS_Store                # macOS
+Thumbs.db                # Windows
+desktop.ini              # Windows
