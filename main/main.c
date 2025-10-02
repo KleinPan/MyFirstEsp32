@@ -71,5 +71,5 @@ void app_main(void)
     lcd_compent_init();
 
     // 显示图片
-    lcd_draw_picture(0, 0, 320, 240, gImage_yingwu);
+    lcd_draw_picture(0, 0, 320, 240, gImage_1);
 }
