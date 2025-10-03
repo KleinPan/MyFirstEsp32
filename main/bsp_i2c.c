@@ -1,16 +1,33 @@
 #include "bsp_i2c.h"
 
-esp_err_t bsp_i2c_init(void)
+i2c_master_dev_handle_t handle_attitude;
+i2c_master_dev_handle_t handle_io;
+void bsp_i2c_init(void)
 {
-    i2c_config_t i2c_conf = {
-        .mode = I2C_MODE_MASTER,
-        .sda_io_num = BSP_I2C_SDA,
-        .sda_pullup_en = GPIO_PULLUP_ENABLE,
+    i2c_master_bus_config_t i2c_mst_config = {
+        .clk_source = I2C_CLK_SRC_DEFAULT,
+        .i2c_port = BSP_I2C_NUM,
         .scl_io_num = BSP_I2C_SCL,
-        .scl_pullup_en = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = BSP_I2C_FREQ_HZ};
-    i2c_param_config(BSP_I2C_NUM, &i2c_conf);
+        .sda_io_num = BSP_I2C_SDA,
+        .glitch_ignore_cnt = 7,
+        .flags.enable_internal_pullup = true,
+    };
+    i2c_master_bus_handle_t bus_handle;
+    ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_mst_config, &bus_handle));
 
-    return i2c_driver_install(BSP_I2C_NUM, i2c_conf.mode, 0, 0, 0);
+    // attitude
+    i2c_device_config_t dev_cfg = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = QMI8658_SENSOR_ADDR,
+        .scl_speed_hz = BSP_I2C_FREQ_HZ,
+    };
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, &handle_attitude));
+
+    // io
+    i2c_device_config_t dev_cfg2 = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = PCA9557_SENSOR_ADDR,
+        .scl_speed_hz = BSP_I2C_FREQ_HZ,
+    };
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg2, &handle_io));
 }
-

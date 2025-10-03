@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+
 #include "esp_chip_info.h"
 #include "esp_flash.h"
 #include "esp_system.h"
@@ -13,7 +12,11 @@
 #include "logo_en.h"
 
 #include "attitude_qmi8658.h"
+#include "camera.h"
+ 
+
 static const char *TAG = "Main";
+// https://components.espressif.com/
 
 t_sQMI8658 QMI8658;
 void app_main(void)
@@ -55,21 +58,26 @@ void app_main(void)
     fflush(stdout);
     esp_restart();
     */
-    ESP_ERROR_CHECK(bsp_i2c_init());  // 初始化I2C总线
+    bsp_i2c_init();                                // 初始化I2C总线
     ESP_LOGI(TAG, "I2C initialized successfully"); // 输出I2C初始化成功的信息
-    
-    qmi8658_init();
 
-    //while (1)
-    //{
-    //    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    //    qmi8658_fetch_angleFromAcc(&QMI8658);
-    //    ESP_LOGI(TAG, "angle_x = %.1f  angle_y = %.1f angle_z = %.1f",QMI8658.AngleX, QMI8658.AngleY, QMI8658.AngleZ);
-    //}
+    bsp_attitude_init();
 
-    pca9557_init();
-    lcd_compent_init();
+    while (1)
+    {
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        qmi8658_fetch_angleFromAcc(&QMI8658);
+        ESP_LOGI(TAG, "angle_x = %.1f  angle_y = %.1f angle_z = %.1f", QMI8658.AngleX, QMI8658.AngleY, QMI8658.AngleZ);
+    }
 
-    // 显示图片
-    lcd_draw_picture(0, 0, 320, 240, gImage_1);
+    // bsp_expansion_init();
+    // bsp_lcd_init();
+
+    //// 显示图片
+    // lcd_draw_picture(0, 0, 320, 240, gImage_1);
+    // vTaskDelay(300/ portTICK_PERIOD_MS);
+
+    // 初始化摄像头
+
+    // bsp_camera_init();
 }

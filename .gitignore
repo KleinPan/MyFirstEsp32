@@ -1,5 +1,6 @@
 # ESP-IDF 编译产物
-/build/                  # 编译输出目录（最关键，体积大且可重建）
+/build/
+/managed_components/
 #/sdkconfig               # 项目配置文件（本地配置，不同环境可能不同）
 #/sdkconfig.old           # 配置文件备份
 

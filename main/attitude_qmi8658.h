@@ -3,8 +3,7 @@
 #include "bsp_i2c.h"
 #include "esp_err.h"
 
-#define BSP_I2C_NUM 0
-#define QMI8658_SENSOR_ADDR 0x6A
+
 
 enum qmi8658_reg
 {
@@ -91,6 +90,6 @@ typedef struct
     float AngleZ;
 } t_sQMI8658;
 
-void qmi8658_init(void);
+void bsp_attitude_init(void);
 void qmi8658_Read_AccAndGry(t_sQMI8658 *p);
 void qmi8658_fetch_angleFromAcc(t_sQMI8658 *p);

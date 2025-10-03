@@ -3,12 +3,16 @@
 #include <esp_heap_caps.h>
 #include "io_pca9557.h"
 
-
 static const char *TAG = "lcd_ST7789";
 // 液晶屏显示
 // 液晶屏初始化
 esp_lcd_panel_handle_t panel_handle = NULL;
 esp_lcd_panel_io_handle_t io_handle = NULL;
+
+esp_lcd_panel_handle_t get_panel_handle()
+{
+    return panel_handle;
+}
 
 esp_err_t bsp_display_backlight_on()
 {
@@ -166,7 +170,7 @@ void lcd_set_color(uint16_t color)
     }
 }
 
-esp_err_t lcd_compent_init(void)
+esp_err_t bsp_lcd_init(void)
 {
     esp_err_t ret = ESP_OK;
 
