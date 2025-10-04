@@ -59,23 +59,24 @@ void app_main(void)
     */
     bsp_i2c_init(); // 初始化I2C总线
 
-    bsp_attitude_init();
+    // bsp_attitude_init();
 
-    while (1)
+    /* while (1)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         qmi8658_fetch_angleFromAcc(&QMI8658);
         ESP_LOGI(TAG, "angle_x = %.1f  angle_y = %.1f angle_z = %.1f", QMI8658.AngleX, QMI8658.AngleY, QMI8658.AngleZ);
-    }
+    } */
 
-    // bsp_expansion_init();
-    // bsp_lcd_init();
+    bsp_expansion_init();
+    bsp_lcd_init();
 
-    //// 显示图片
-    // lcd_draw_picture(0, 0, 320, 240, gImage_1);
-    // vTaskDelay(300/ portTICK_PERIOD_MS);
+    // 显示图片
+    lcd_draw_picture(0, 0, 320, 240, gImage_1);
+    vTaskDelay(300 / portTICK_PERIOD_MS);
 
     // 初始化摄像头
 
-    // bsp_camera_init();
+    bsp_camera_init();
+    camera_start_show();
 }

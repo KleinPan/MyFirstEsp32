@@ -25,4 +25,4 @@
 #define XCLK_FREQ_HZ 24000000
 
 void bsp_camera_init(void);
-void app_camera_lcd(void);
+void camera_start_show(void);

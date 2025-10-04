@@ -82,7 +82,7 @@ static void task_process_camera(void *arg)
     }
 }
 
-void app_camera_lcd(void)
+void camera_start_show(void)
 {
     xQueueLCDFrame = xQueueCreate(2, sizeof(camera_fb_t *)); // 消息数量是2
     if (xQueueLCDFrame == NULL)

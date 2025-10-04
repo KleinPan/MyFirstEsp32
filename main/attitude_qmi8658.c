@@ -34,7 +34,7 @@ void bsp_attitude_init(void)
     ESP_LOGI(TAG, "QMI8658 OK!");
 
     qmi8658_register_write_byte(QMI8658_RESET, 0xb0); // 复位
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    vTaskDelay(50 / portTICK_PERIOD_MS);
     qmi8658_register_write_byte(QMI8658_CTRL1, 0x40); // CTRL1 设置地址自动增加
     qmi8658_register_write_byte(QMI8658_CTRL7, 0x03); // CTRL7 允许加速度和陀螺仪
     qmi8658_register_write_byte(QMI8658_CTRL2, 0x95); // CTRL2 设置ACC 4g 250Hz
