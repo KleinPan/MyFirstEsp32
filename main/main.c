@@ -13,7 +13,6 @@
 
 #include "attitude_qmi8658.h"
 #include "camera.h"
- 
 
 static const char *TAG = "Main";
 // https://components.espressif.com/
@@ -58,8 +57,7 @@ void app_main(void)
     fflush(stdout);
     esp_restart();
     */
-    bsp_i2c_init();                                // 初始化I2C总线
-    ESP_LOGI(TAG, "I2C initialized successfully"); // 输出I2C初始化成功的信息
+    bsp_i2c_init(); // 初始化I2C总线
 
     bsp_attitude_init();
 

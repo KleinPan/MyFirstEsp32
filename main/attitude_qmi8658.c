@@ -6,7 +6,12 @@ static const char *TAG = "qmi8658";
 
 static esp_err_t qmi8658_register_read(uint8_t reg_addr, uint8_t *data, size_t len)
 {
-    return i2c_master_transmit_receive(handle_attitude, &reg_addr, 1, data, len, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
+    esp_err_t ret = i2c_master_transmit_receive(handle_attitude, &reg_addr, 1, data, len, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (ret != ESP_OK)
+    {
+        ESP_LOGE(TAG, "I2C read failed: 0x%x", ret);
+    }
+    return ret;
 }
 
 static esp_err_t qmi8658_register_write_byte(uint8_t reg_addr, uint8_t data)
