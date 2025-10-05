@@ -45,7 +45,7 @@ esp_err_t bsp_display_brightness_set(int brightness_percent);
 esp_err_t bsp_display_backlight_on();
 esp_err_t bsp_display_backlight_off();
 
-esp_err_t bsp_lcd_init(void);
+esp_err_t bsp_lcd_init_common(void);
 void lcd_set_color(uint16_t color);
 void lcd_draw_picture(int x_start, int y_start, int x_end, int y_end, const unsigned char *gImage);
 void bsp_lvgl_init(void);

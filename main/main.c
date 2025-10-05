@@ -69,17 +69,19 @@ void app_main(void)
     } */
 
     bsp_ioexpansion_init();
-    bsp_lcd_init();
+    // 显示图片逻辑
+    // bsp_lcd_init();
+    // lcd_draw_picture(0, 0, BSP_LCD_H_RES, BSP_LCD_V_RES, gImage_1);
+    // vTaskDelay(300 / portTICK_PERIOD_MS);
 
-    // 显示图片
-    //lcd_draw_picture(0, 0, BSP_LCD_H_RES, BSP_LCD_V_RES, gImage_1);
-    //vTaskDelay(300 / portTICK_PERIOD_MS);
+    //  摄像头显示到屏幕逻辑
+    // bsp_camera_init();
+    // camera_start_show();
 
-    // 初始化摄像头
-
-    //bsp_camera_init();
-    //camera_start_show();
-
-    // bsp_lvgl_init();
-    // lv_demo_benchmark(); // 调用lvgl demo
+    // LVGL逻辑
+    bsp_lvgl_init();
+    //lv_demo_benchmark(); // 调用lvgl demo
+    //lv_demo_music();
+    //lv_demo_stress();
+    lv_demo_widgets();
 }

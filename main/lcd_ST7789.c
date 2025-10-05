@@ -10,11 +10,11 @@ static const char *TAG = "lcd_ST7789";
 
 esp_lcd_panel_handle_t panel_handle = NULL;
 esp_lcd_panel_io_handle_t io_handle = NULL;
-esp_lcd_touch_handle_t tp; // LCD touch handler
-static lv_disp_t *disp;//指向液晶屏
-static lv_indev_t *disp_indev=NULL;//指向触摸屏
+esp_lcd_touch_handle_t tp;            // LCD touch handler
+static lv_disp_t *disp;               // 指向液晶屏
+static lv_indev_t *disp_indev = NULL; // 指向触摸屏
 
-
+#pragma region 背光亮度设置
 esp_err_t bsp_display_backlight_on()
 {
     return bsp_display_brightness_set(100);
@@ -48,8 +48,10 @@ esp_err_t bsp_display_brightness_set(int brightness_percent)
 
     return ESP_OK;
 }
+#pragma endregion
 
-// 液晶屏初始化
+#pragma region 液晶屏初始化
+
 static esp_err_t lcd_Init()
 {
     esp_err_t ret = ESP_OK;
@@ -134,6 +136,12 @@ esp_err_t bsp_display_brightness_init(void)
 
     return ESP_OK;
 }
+
+#pragma endregion
+
+#pragma region 液晶屏功能操作
+
+
 void lcd_draw_picture(int x_start, int y_start, int x_end, int y_end, const unsigned char *gImage)
 {
     size_t pixels_size = (x_end - x_start) * (y_end - y_start) * sizeof(uint16_t);
@@ -171,7 +179,10 @@ void lcd_set_color(uint16_t color)
     }
 }
 
-esp_err_t bsp_lcd_init(void)
+#pragma endregion
+
+esp_err_t bsp_lcd_init_common(void)
+
 {
     esp_err_t ret = ESP_OK;
 
@@ -181,7 +192,41 @@ esp_err_t bsp_lcd_init(void)
     ret = bsp_display_backlight_on();                    // 打开背光显示
     return ret;
 }
+#pragma region bsp_touch
+// 触摸屏初始化
+esp_err_t bsp_touch_init(esp_lcd_touch_handle_t *ret_touch)
+{
+    /* Initialize touch */
+    esp_lcd_touch_config_t tp_cfg = {
+        .x_max = BSP_LCD_V_RES,
+        .y_max = BSP_LCD_H_RES,
+        .rst_gpio_num = GPIO_NUM_NC, // Shared with LCD reset
+        .int_gpio_num = GPIO_NUM_NC,
+        .levels = {
+            .reset = 0,
+            .interrupt = 0,
+        },
+        .flags = {
+            .swap_xy = 1,
+            .mirror_x = 1,
+            .mirror_y = 0,
+        },
+    };
+    esp_lcd_panel_io_handle_t tp_io_handle = NULL;
+    esp_lcd_panel_io_i2c_config_t tp_io_config = ESP_LCD_TOUCH_IO_I2C_FT5x06_CONFIG();
+    tp_io_config.scl_speed_hz = BSP_I2C_FREQ_HZ;
 
+    i2c_master_bus_handle_t handle;
+    ESP_ERROR_CHECK(i2c_master_get_bus_handle(0, &handle));
+
+    ESP_RETURN_ON_ERROR(esp_lcd_new_panel_io_i2c(handle, &tp_io_config, &tp_io_handle), TAG, "");
+    ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_ft5x06(tp_io_handle, &tp_cfg, ret_touch));
+
+    return ESP_OK;
+}
+#pragma endregion
+
+#pragma region lvgl_init
 // 液晶屏初始化+添加LVGL接口
 static lv_disp_t *bsp_display_lcd_init(void)
 {
@@ -212,36 +257,6 @@ static lv_disp_t *bsp_display_lcd_init(void)
         }};
 
     return lvgl_port_add_disp(&disp_cfg);
-}
-
-
-
-// 触摸屏初始化
-esp_err_t bsp_touch_init(esp_lcd_touch_handle_t *ret_touch)
-{
-    /* Initialize touch */
-    esp_lcd_touch_config_t tp_cfg = {
-        .x_max = BSP_LCD_V_RES,
-        .y_max = BSP_LCD_H_RES,
-        .rst_gpio_num = GPIO_NUM_NC, // Shared with LCD reset
-        .int_gpio_num = GPIO_NUM_NC,
-        .levels = {
-            .reset = 0,
-            .interrupt = 0,
-        },
-        .flags = {
-            .swap_xy = 1,
-            .mirror_x = 1,
-            .mirror_y = 0,
-        },
-    };
-    esp_lcd_panel_io_handle_t tp_io_handle = NULL;
-    esp_lcd_panel_io_i2c_config_t tp_io_config = ESP_LCD_TOUCH_IO_I2C_FT5x06_CONFIG();
-
-    ESP_RETURN_ON_ERROR(esp_lcd_new_panel_io_i2c((esp_lcd_i2c_bus_handle_t)BSP_I2C_NUM, &tp_io_config, &tp_io_handle), TAG, "");
-    ESP_ERROR_CHECK(esp_lcd_touch_new_i2c_ft5x06(tp_io_handle, &tp_cfg, ret_touch));
-
-    return ESP_OK;
 }
 // 触摸屏初始化+添加LVGL接口
 static lv_indev_t *bsp_display_indev_init(lv_disp_t *disp)
@@ -277,3 +292,4 @@ void bsp_lvgl_init(void)
     /* 打开液晶屏背光 */
     bsp_display_backlight_on();
 }
+#pragma endregion
