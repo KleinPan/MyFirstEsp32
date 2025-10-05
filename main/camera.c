@@ -1,6 +1,10 @@
+
+
 #include <esp_err.h>
-#include "esp_camera.h"
 #include "camera.h"
+#if CAMERA_EN
+
+#include "esp_camera.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
 #include "freertos/FreeRTOS.h"
@@ -94,3 +98,4 @@ void camera_start_show(void)
     xTaskCreatePinnedToCore(task_process_camera, "task_process_camera", 3 * 1024, NULL, 5, NULL, 1);
     xTaskCreatePinnedToCore(task_process_lcd, "task_process_lcd", 4 * 1024, NULL, 5, NULL, 0);
 }
+#endif

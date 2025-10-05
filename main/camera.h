@@ -1,3 +1,7 @@
+
+#define CAMERA_EN 1
+#if CAMERA_EN
+
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_ops.h"
@@ -26,3 +30,4 @@
 
 void bsp_camera_init(void);
 void camera_start_show(void);
+#endif

@@ -1,7 +1,7 @@
 #include "io_pca9557.h"
 
 // 初始化PCA9557 IO扩展芯片
-void bsp_expansion_init()
+void bsp_ioexpansion_init()
 {
     // 写入输出引脚默认值 DVP_PWDN=1  PA_EN = 0  LCD_CS = 1
     pca9557_register_write_byte(PCA9557_OUTPUT_PORT, 0x05);

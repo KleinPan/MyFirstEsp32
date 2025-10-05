@@ -10,6 +10,7 @@
 #include "driver/spi_master.h"
 #include "driver/ledc.h"
 
+
 // 液晶屏显示
 
 #define LCD_LEDC_CH LEDC_CHANNEL_0
@@ -38,7 +39,7 @@
 
 #define BSP_LCD_SPI_NUM (SPI3_HOST)
 
-extern esp_lcd_panel_handle_t panel_handle  ;
+extern esp_lcd_panel_handle_t panel_handle;
 esp_err_t bsp_display_brightness_init(void);
 esp_err_t bsp_display_brightness_set(int brightness_percent);
 esp_err_t bsp_display_backlight_on();
@@ -47,4 +48,5 @@ esp_err_t bsp_display_backlight_off();
 esp_err_t bsp_lcd_init(void);
 void lcd_set_color(uint16_t color);
 void lcd_draw_picture(int x_start, int y_start, int x_end, int y_end, const unsigned char *gImage);
-esp_lcd_panel_handle_t get_panel_handle();
+void bsp_lvgl_init(void);
+

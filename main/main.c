@@ -10,9 +10,9 @@
 #include "io_pca9557.h"
 #include "lcd_ST7789.h"
 #include "logo_en.h"
-
 #include "attitude_qmi8658.h"
 #include "camera.h"
+#include "demos/lv_demos.h"
 
 static const char *TAG = "Main";
 // https://components.espressif.com/
@@ -46,7 +46,7 @@ void app_main(void)
     printf("%" PRIu32 "MB %s flash\n", flash_size / (uint32_t)(1024 * 1024),
            (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
-    printf("Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
+    ESP_LOGD(TAG, "Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
 
     /*
     for (int i = 10; i >= 0; i--) {
@@ -68,15 +68,18 @@ void app_main(void)
         ESP_LOGI(TAG, "angle_x = %.1f  angle_y = %.1f angle_z = %.1f", QMI8658.AngleX, QMI8658.AngleY, QMI8658.AngleZ);
     } */
 
-    bsp_expansion_init();
+    bsp_ioexpansion_init();
     bsp_lcd_init();
 
     // 显示图片
-    lcd_draw_picture(0, 0, 320, 240, gImage_1);
-    vTaskDelay(300 / portTICK_PERIOD_MS);
+    //lcd_draw_picture(0, 0, BSP_LCD_H_RES, BSP_LCD_V_RES, gImage_1);
+    //vTaskDelay(300 / portTICK_PERIOD_MS);
 
     // 初始化摄像头
 
-    bsp_camera_init();
-    camera_start_show();
+    //bsp_camera_init();
+    //camera_start_show();
+
+    // bsp_lvgl_init();
+    // lv_demo_benchmark(); // 调用lvgl demo
 }
